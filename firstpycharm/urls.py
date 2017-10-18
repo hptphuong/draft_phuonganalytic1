@@ -16,9 +16,11 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 from django.views.generic import TemplateView
-
+from Analytics import collector
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^a.gif/', TemplateView.as_view(template_name='script\homepage.html')),
-    # url(r'^$',TemplateView.as_view(template_name='script\homepage.html'),name='homepage'),
+    url(r'^a.gif', collector.pixel_gif),
+    url(r'^gtag/js', collector.generatejs),
+    # url(r'^a.gif/', TemplateView.as_view(template_name='script\homepage.html')),
+    url(r'^$',TemplateView.as_view(template_name='script\homepage.html'),name='homepage'),
 ]
