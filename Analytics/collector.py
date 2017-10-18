@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from django.contrib.gis.geoip2 import GeoIP2
 import base64
 import logging
+import json
 logger = logging.getLogger(__name__)
 
 def pixel_gif(request):
@@ -28,8 +29,8 @@ def pixel_gif(request):
     logger.warn("pixel_gif!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
     logger.warn("url" + info['url'])
     logger.warn("!!!!!!!!!!!IP!!!!!!!!:"+ip)
-    logger.warn("!!!!!!!!!!!!!!!!!!country_code:"+g.country(ip)['country_code'])
-    logger.warn("!!!!!!!!!!!!!!!!!!city:" + g.city(ip)['city'])
+    logger.warn("!!!!!!!!!!!!!!!!!!country"+json.dumps(g.country(ip)))
+    logger.warn("!!!!!!!!!!!!!!!!!!city:" + json.dumps(g.city(ip)))
     logger.warn("pixel_gif!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
     return res
 def generatejs(request):
