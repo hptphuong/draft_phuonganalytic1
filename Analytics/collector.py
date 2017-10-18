@@ -1,5 +1,6 @@
 from django.http import HttpResponse
-from django.contrib.gis.utils import GeoIP
+# from django.contrib.gis.utils import GeoIP
+from django.contrib.gis.geoip2 import GeoIP2
 import base64
 import logging
 logger = logging.getLogger(__name__)
@@ -22,8 +23,8 @@ def pixel_gif(request):
         ip = x_forwarded_for.split(',')[0]
     else:
         ip = request.META.get('REMOTE_ADDR')
-    g = GeoIP()
-    lat, long = g.lat_lon(ip)
+    g = GeoIP2('geoip2_db')
+
     logger.warn("pixel_gif!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
     logger.warn("url" + info['url'])
     logger.warn("!!!!!!!!!!!IP!!!!!!!!:"+ip)

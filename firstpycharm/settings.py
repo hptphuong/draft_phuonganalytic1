@@ -125,3 +125,5 @@ STATICFILES_DIRS = (
 )
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+GEOIP_PATH = '..\geoip2_db'
