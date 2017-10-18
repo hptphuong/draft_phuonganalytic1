@@ -14,6 +14,7 @@ def pixel_gif(request):
     # print("title", info['t'])
     # print("ref", info['ref'])
     logger.warn("pixel_gif!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+    logger.debug("url"+info['url'])
     logger.warn("pixel_gif!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
     return res
 def generatejs(request):
