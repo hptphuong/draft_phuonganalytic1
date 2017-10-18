@@ -8,9 +8,9 @@ def pixel_gif(request):
     PIXEL_GIF_DATA = base64.b64decode(PIXEL_GIF_DATA)
     info=request.GET
     res=HttpResponse(PIXEL_GIF_DATA, content_type='image/gif')
-    print("url",info['url'])
-    print("title", info['t'])
-    print("ref", info['ref'])
+    # print("url",info['url'])
+    # print("title", info['t'])
+    # print("ref", info['ref'])
 
     return res
 def generatejs(request):
