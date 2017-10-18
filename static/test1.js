@@ -6,3 +6,4 @@
       ref = encodeURIComponent(document.referrer);
       img.src = 'phuonganalytic.herokuapp.com/a.gif?url=' + url + '&t=' + title + '&ref=' + ref;
 })();
+

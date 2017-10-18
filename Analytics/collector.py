@@ -20,7 +20,7 @@ def generatejs(request):
           url = encodeURIComponent(document.location.href),
           title = encodeURIComponent(document.title),
           ref = encodeURIComponent(document.referrer);
-          img.src = 'http://127.0.0.1:8000/a.gif?url=' + url + '&t=' + title + '&ref=' + ref;
+          img.src = 'https://phuonganalytic.herokuapp.com/a.gif?url=' + url + '&t=' + title + '&ref=' + ref;
         })();
     """
     return HttpResponse(js_str)
@@ -30,4 +30,7 @@ def get_client_ip(request):
         ip = x_forwarded_for.split(',')[0]
     else:
         ip = request.META.get('REMOTE_ADDR')
+        ip = request.META.get('REMOTE_ADDR')
     return ip
+
+
