@@ -1,5 +1,7 @@
 from django.http import HttpResponse
 import base64
+import logging
+logger = logging.getLogger(__name__)
 
 def pixel_gif(request):
     PIXEL_GIF_DATA = """
@@ -11,7 +13,8 @@ def pixel_gif(request):
     # print("url",info['url'])
     # print("title", info['t'])
     # print("ref", info['ref'])
-
+    logger.warn("pixel_gif!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+    logger.warn("pixel_gif!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
     return res
 def generatejs(request):
     js_str="""
