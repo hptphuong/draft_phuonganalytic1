@@ -28,8 +28,8 @@ def pixel_gif(request):
     logger.warn("pixel_gif!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
     logger.warn("url" + info['url'])
     logger.warn("!!!!!!!!!!!IP!!!!!!!!:"+ip)
-    logger.warn("!!!!!!!!!!!!!!!!!!country:"+g.country(ip))
-    logger.warn("!!!!!!!!!!!!!!!!!!city:" + g.city(ip))
+    logger.warn("!!!!!!!!!!!!!!!!!!country_code:"+g.country(ip)['country_code'])
+    logger.warn("!!!!!!!!!!!!!!!!!!city:" + g.city(ip)['city'])
     logger.warn("pixel_gif!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
     return res
 def generatejs(request):
