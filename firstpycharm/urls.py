@@ -22,5 +22,5 @@ urlpatterns = [
     url(r'^a.gif', collector.pixel_gif),
     url(r'^gtag/js', collector.generatejs),
     # url(r'^a.gif/', TemplateView.as_view(template_name='script\homepage.html')),
-    url(r'^$',TemplateView.as_view(template_name='script\homepage.html'),name='homepage'),
+    # url(r'^$',TemplateView.as_view(template_name='script\homepage.html'),name='homepage'),
 ]
