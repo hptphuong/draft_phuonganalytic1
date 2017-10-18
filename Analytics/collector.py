@@ -1,4 +1,5 @@
 from django.http import HttpResponse
+from django.contrib.gis.utils import GeoIP
 import base64
 import logging
 logger = logging.getLogger(__name__)
@@ -13,15 +14,21 @@ def pixel_gif(request):
     # print("url",info['url'])
     # print("title", info['t'])
     # print("ref", info['ref'])
-    logger.warn("pixel_gif!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-    logger.warn("url"+info['url'])
+
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+
+
     if x_forwarded_for:
         ip = x_forwarded_for.split(',')[0]
     else:
         ip = request.META.get('REMOTE_ADDR')
-
+    g = GeoIP()
+    lat, long = g.lat_lon(ip)
+    logger.warn("pixel_gif!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+    logger.warn("url" + info['url'])
     logger.warn("!!!!!!!!!!!IP!!!!!!!!:"+ip)
+    logger.warn("!!!!!!!!!!!!!!!!!!country:"+g.country(ip))
+    logger.warn("!!!!!!!!!!!!!!!!!!city:" + g.city(ip))
     logger.warn("pixel_gif!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
     return res
 def generatejs(request):
