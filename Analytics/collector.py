@@ -24,10 +24,13 @@ def pixel_gif(request):
         ip = x_forwarded_for.split(',')[0]
     else:
         ip = request.META.get('REMOTE_ADDR')
+    if (ip=='127.0.0.1'):
+        ip = '118.69.213.98'
     g = GeoIP2('geoip2_db')
 
     logger.warn("pixel_gif!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
     logger.warn("url" + info['url'])
+    logger.warn("title" + info['t'])
     logger.warn("!!!!!!!!!!!IP!!!!!!!!:"+ip)
     logger.warn("!!!!!!!!!!!!!!!!!!country"+json.dumps(g.country(ip)))
     logger.warn("!!!!!!!!!!!!!!!!!!city:" + json.dumps(g.city(ip)))
@@ -44,13 +47,6 @@ def generatejs(request):
         })();
     """
     return HttpResponse(js_str)
-def get_client_ip(request):
-    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
-    if x_forwarded_for:
-        ip = x_forwarded_for.split(',')[0]
-    else:
-        ip = request.META.get('REMOTE_ADDR')
-        ip = request.META.get('REMOTE_ADDR')
-    return ip
+
 
 
