@@ -7,11 +7,17 @@
         return a ? a.replace(/^[\s\xa0]+|[\s\xa0]+$/g, "") : ""
     	};
     var fq=[]; //function queque
-    var fq['create'] = function(){
-    	
+    fq['create'] = function(a){
+    	var tam = 1;
+    	tam+=1;
     }
 	var gb = qa(window.FsoftAnalyticsObject) && sa(window.FsoftAnalyticsObject) || "fsa";
-	O[gb]=qa;
+	O[gb]=function(a){
+
+		fq[a](arguments);
+
+
+	};
 
     // return "http://127.0.0.1:8000/"
 })(window);
