@@ -63,6 +63,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'firstpycharm.middleware.RequestLoggerMiddleware'
             ],
         },
     },
@@ -127,3 +128,4 @@ STATICFILES_DIRS = (
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 GEOIP_PATH = '..\geoip2_db'
+KAFKA_SERVERS='localhost:9092'

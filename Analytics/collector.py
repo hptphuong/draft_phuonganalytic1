@@ -7,19 +7,14 @@ import json
 logger = logging.getLogger(__name__)
 
 def pixel_gif(request):
-    PIXEL_GIF_DATA = """
-    R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7
-    """.strip()
-    PIXEL_GIF_DATA = base64.b64decode(PIXEL_GIF_DATA)
+
+    PIXEL_GIF_DATA = base64.b64decode("")
     info=request.GET
-    res=HttpResponse(PIXEL_GIF_DATA, content_type='image/gif')
-    # print("url",info['url'])
-    # print("title", info['t'])
-    # print("ref", info['ref'])
 
+    #
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
-
-
+    #
+    #
     if x_forwarded_for:
         ip = x_forwarded_for.split(',')[0]
     else:
@@ -35,7 +30,8 @@ def pixel_gif(request):
     logger.warn("!!!!!!!!!!!!!!!!!!country"+json.dumps(g.country(ip)))
     logger.warn("!!!!!!!!!!!!!!!!!!city:" + json.dumps(g.city(ip)))
     logger.warn("pixel_gif!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-    return res
+    return HttpResponse(PIXEL_GIF_DATA, content_type='image/gif')
+
 def generatejs(request):
     js_str="""
     (function() {
