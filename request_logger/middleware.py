@@ -66,7 +66,7 @@ class RequestLoggerMiddleware(MiddlewareMixin):
 
         logger.warn("\n=================== Data collector")
 
-        logger.warn(json.dumps(dataExtracted))
+        # logger.warn(json.dumps(dataExtracted))
         pprint.pprint(dataExtracted)
 
         logger.warn("Data collector ===================\n")
