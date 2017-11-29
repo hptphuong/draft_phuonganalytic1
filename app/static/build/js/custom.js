@@ -370,7 +370,25 @@ function init_fsa_user_chart(time_label) {
     });
 }
 
+function generate_html_percent_change(d) {
+
+}
+
 function init_fsa_new_user_chart(time_label) {
+    var tooltip_content = `<line-chart>`;
+    tooltip_content += `<div class="inside">`;
+    tooltip_content += `<div class="title">`;
+    tooltip_content += `29-Nov-2017 vs 30-Nov-2017`;
+    tooltip_content += `</div> <div class="inline">`;
+    tooltip_content += `users`;
+    tooltip_content += `</div> <div class="inline">`;
+    tooltip_content += `10`;
+    tooltip_content += `</div><div class="inline glyphicon `;
+    tooltip_content += `glyphicon-arrow-up" `;
+    tooltip_content += `style="color:green">`;
+    tooltip_content += `200 %`;
+    tooltip_content += `</div></div></line-chart>`;
+
     var user_chart = c3.generate({
         bindto: '#new_user_chart',
         data: {
@@ -395,7 +413,7 @@ function init_fsa_new_user_chart(time_label) {
         },
         tooltip: {
             contents: function(d, defaultTitleFormat, defaultValueFormat, color) {
-                return "div {width: 320px;padding: 10px;border: 5px solid gray;margin: 0; }aaaa</div>";
+                return tooltip_content;
             }
         }
     });
