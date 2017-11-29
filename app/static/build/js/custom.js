@@ -332,6 +332,75 @@ function gd(year, month, day) {
     return new Date(year, month - 1, day).getTime();
 }
 
+
+function init_fsa_user_chart(time_label) {
+
+    // var chart = c3.generate({
+    //     bindto: '#user_chart',
+    //     data: {
+    //         columns: [
+    //             ['current', 30, 200, 100, 400, 150, 250],
+    //             [time_label, 50, 20, 10, 40, 15, 25]
+    //         ]
+    //     }
+    // });
+
+    var user_chart = c3.generate({
+        bindto: '#user_chart',
+        data: {
+            x: 'x',
+            //        xFormat: '%Y%m%d', // 'xFormat' can be used as custom format of 'x'
+            columns: [
+                ['x', '2013-01-01', '2013-01-02', '2013-01-03', '2013-01-04', '2013-01-05', '2013-01-06'],
+                //            ['x', '20130101', '20130102', '20130103', '20130104', '20130105', '20130106'],
+                ['data1', 30, 200, 100, 400, 150, 250],
+                ['data2', 130, 340, 200, 500, 250, 350]
+            ]
+        },
+        axis: {
+            x: {
+                type: 'timeseries',
+                localtime: true,
+                tick: {
+                    count: 4,
+                    format: '%Y-%m-%d'
+                }
+            }
+        }
+    });
+}
+
+function init_fsa_new_user_chart(time_label) {
+    var user_chart = c3.generate({
+        bindto: '#new_user_chart',
+        data: {
+            x: 'x',
+            //        xFormat: '%Y%m%d', // 'xFormat' can be used as custom format of 'x'
+            columns: [
+                ['x', '2014-01-01', '2014-01-02', '2014-01-03', '2014-01-04', '2014-01-05', '2014-01-06'],
+                //            ['x', '20130101', '20130102', '20130103', '20130104', '20130105', '20130106'],
+                ['data1', 230, 100, 400, 400, 150, 500],
+                ['data2', 130, 340, 200, 700, 350, 350]
+            ]
+        },
+        axis: {
+            x: {
+                type: 'timeseries',
+                localtime: true,
+                tick: {
+                    count: 4,
+                    format: '%Y-%m-%d'
+                }
+            }
+        },
+        tooltip: {
+            contents: function(d, defaultTitleFormat, defaultValueFormat, color) {
+                return "div {width: 320px;padding: 10px;border: 5px solid gray;margin: 0; }aaaa</div>";
+            }
+        }
+    });
+}
+
 function init_flot_chart() {
 
     if (typeof($.plot) === 'undefined') {
@@ -1863,6 +1932,7 @@ function init_IonRangeSlider() {
 
 
 /* DATERANGEPICKER */
+var date_label;
 
 function init_daterangepicker() {
 
@@ -1874,6 +1944,7 @@ function init_daterangepicker() {
     var cb = function(start, end, label) {
         console.log(start.toISOString(), end.toISOString(), label);
         $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+
     };
 
     var optionSet1 = {
@@ -1886,7 +1957,7 @@ function init_daterangepicker() {
         },
         showDropdowns: true,
         showWeekNumbers: true,
-        timePicker: false,
+        timePicker: true,
         timePickerIncrement: 1,
         timePicker12Hour: true,
         ranges: {
@@ -1951,6 +2022,7 @@ function init_daterangepicker_right() {
     var cb = function(start, end, label) {
         console.log(start.toISOString(), end.toISOString(), label);
         $('#reportrange_right span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+        init_fsa_user_chart(label);
     };
 
     var optionSet1 = {
@@ -1970,7 +2042,10 @@ function init_daterangepicker_right() {
             'Today': [moment(), moment()],
             'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
             'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+            'Last 18 Days': [moment().subtract(17, 'days'), moment()],
+            'Last 28 Days': [moment().subtract(27, 'days'), moment()],
             'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+            'Last 18 Days': [moment().subtract(17, 'days'), moment()],
             'This Month': [moment().startOf('month'), moment().endOf('month')],
             'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
         },
@@ -5477,6 +5552,8 @@ function init_echarts() {
 $(document).ready(function() {
 
     init_sparklines();
+    init_fsa_user_chart();
+    init_fsa_new_user_chart();
     init_flot_chart();
     init_sidebar();
     init_wysiwyg();
@@ -5510,35 +5587,50 @@ $(document).ready(function() {
     init_CustomNotification();
     init_autosize();
     init_autocomplete();
-    var ctxL = document.getElementById("lineChart").getContext('2d');
-    var myLineChart = new Chart(ctxL, {
-        type: 'line',
-        data: {
-            labels: ["January", "February", "March", "April", "May", "June", "July"],
-            datasets: [{
-                label: "My First dataset",
-                fillColor: "rgba(220,220,220,0.2)",
-                strokeColor: "rgba(220,220,220,1)",
-                pointColor: "rgba(220,220,220,1)",
-                pointStrokeColor: "#fff",
-                pointHighlightFill: "#fff",
-                pointHighlightStroke: "rgba(220,220,220,1)",
-                data: [65, 59, 80, 81, 56, 55, 40]
-            }, {
-                label: "My Second dataset",
-                fillColor: "rgba(151,187,205,0.2)",
-                strokeColor: "rgba(151,187,205,1)",
-                pointColor: "rgba(151,187,205,1)",
-                pointStrokeColor: "#fff",
-                pointHighlightFill: "#fff",
-                pointHighlightStroke: "rgba(151,187,205,1)",
-                data: [28, 48, 40, 19, 86, 27, 90]
-            }]
-        },
-        options: {
-            responsive: true
-        }
-    });
-
+    // var ctxL = document.getElementById("lineChart").getContext('2d');
+    // var myLineChart = new Chart(ctxL, {
+    //     type: 'line',
+    //     data: {
+    //         labels: ["January", "February", "March", "April", "May", "June", "July"],
+    //         datasets: [{
+    //             label: "My First dataset",
+    //             fillColor: "rgba(220,220,220,0.2)",
+    //             strokeColor: "rgba(220,220,220,1)",
+    //             pointColor: "rgba(220,220,220,1)",
+    //             pointStrokeColor: "#fff",
+    //             pointHighlightFill: "#fff",
+    //             pointHighlightStroke: "rgba(220,220,220,1)",
+    //             data: [65, 59, 80, 81, 56, 55, 40]
+    //         }, {
+    //             label: "My Second dataset",
+    //             fillColor: "rgba(151,187,205,0.2)",
+    //             strokeColor: "rgba(151,187,205,1)",
+    //             pointColor: "rgba(151,187,205,1)",
+    //             pointStrokeColor: "#fff",
+    //             pointHighlightFill: "#fff",
+    //             pointHighlightStroke: "rgba(151,187,205,1)",
+    //             data: [28, 48, 40, 19, 86, 27, 90]
+    //         }]
+    //     },
+    //     options: {
+    //         responsive: true
+    //     }
+    // });
+    //
+    // var chart = c3.generate({
+    //     bindto: '#lineChart1',
+    //     data: {
+    //         xs: {
+    //             'data1': 'x1',
+    //             'data2': 'x2',
+    //         },
+    //         columns: [
+    //             ['x1', 10, 30, 45, 50, 70, 100],
+    //             ['x2', 30, 50, 75, 100, 120],
+    //             ['data1', 30, 200, 100, 400, 150, 250],
+    //             ['data2', 20, 180, 240, 100, 190]
+    //         ]
+    //     }
+    // });
 
 });

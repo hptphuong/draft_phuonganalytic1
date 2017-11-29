@@ -4329,3 +4329,14 @@ table thead .checkbox.radio { margin-top:-7px;margin-top:-21px; }
   border-top-right-radius: 0;
   border-bottom-left-radius: 4px;
 }
+line-chart {
+    display: inline-block;
+    width: 400px;
+    height: 400px;
+    border: 1px solid #CCC;
+    margin: 100px 100px;
+    background-color: lightgrey;
+}
+line-chart .title{
+  margin: 10px 10px;
+}
