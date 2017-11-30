@@ -6,4 +6,5 @@ class BookMiddleware(MiddlewareMixin ):
         self.get_response = get_response
     def process_request(self, request):
         logger.warn("Middleware executed")
+        print("Middleware executed")
         return None

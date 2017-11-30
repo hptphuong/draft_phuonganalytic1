@@ -341,7 +341,7 @@
         tailUrl = tailUrl + "&je=" + a.get("javaEnabled") * 1;
 
         // fsaCore.requestImage('http://127.0.0.1:8000/a.gif?', tailUrl);
-        fsaCore.requestImage('https://analytic-disablekafka.herokuapp.com/a.gif?', tailUrl);
+        fsaCore.requestImage('http://10.88.113.111:8000/a.gif?', tailUrl);
     };
     fsaCore.create('send', function(a) {
 

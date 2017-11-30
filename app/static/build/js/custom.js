@@ -374,6 +374,26 @@ function generate_html_percent_change(d) {
 
 }
 
+function generate_html_linechart_tooltip(d) {
+
+    var tooltip_content = `<line-chart>`;
+    tooltip_content += `<div class="inside">`;
+    tooltip_content += `<div class="title">`;
+    tooltip_content += d[0].x.toDateString() + " VS ";
+    tooltip_content += d[1].x.toDateString();
+    // vs 30-Nov-2017`;
+    tooltip_content += `</div> <div class="inline">`;
+    tooltip_content += `users`;
+    tooltip_content += `</div> <div class="inline">`;
+    tooltip_content += `10`;
+    tooltip_content += `</div><div class="inline glyphicon `;
+    tooltip_content += `glyphicon-arrow-up" `;
+    tooltip_content += `style="color:green">`;
+    tooltip_content += `200 %`;
+    tooltip_content += `</div></div></line-chart>`;
+    return tooltip_content;
+}
+
 function init_fsa_new_user_chart(time_label) {
     var tooltip_content = `<line-chart>`;
     tooltip_content += `<div class="inside">`;
@@ -413,7 +433,7 @@ function init_fsa_new_user_chart(time_label) {
         },
         tooltip: {
             contents: function(d, defaultTitleFormat, defaultValueFormat, color) {
-                return tooltip_content;
+                return generate_html_linechart_tooltip(d);
             }
         }
     });
