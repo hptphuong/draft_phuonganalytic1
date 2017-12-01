@@ -4331,13 +4331,9 @@ table thead .checkbox.radio { margin-top:-7px;margin-top:-21px; }
 }
 line-chart {
     display: table-cell;
-    width: 250;
-    height: 100px; 
     margin: 100px 100px;
     background-color: #ffffff;
     box-shadow: 2px 2px 5px #888888;
-        
-    
 }
 line-chart .inside{
   margin: 10px 10px;
@@ -4349,4 +4345,9 @@ line-chart .inside .title{
 line-chart .inside .inline{
   display:inline-block;
   margin:10px;
+}
+
+.tab-content .tab-size{
+    
+    height: 320px;
 }

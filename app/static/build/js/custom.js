@@ -374,51 +374,69 @@ function generate_html_percent_change(d) {
 
 }
 
-function generate_html_linechart_tooltip(d) {
+function generate_html_linechart_tooltip(d, m_back) {
 
     var tooltip_content = `<line-chart>`;
     tooltip_content += `<div class="inside">`;
     tooltip_content += `<div class="title">`;
     tooltip_content += d[0].x.toDateString() + " VS ";
-    tooltip_content += d[1].x.toDateString();
+    tooltip_content += d[0].x.clone().addDays(-m_back).toDateString();
     // vs 30-Nov-2017`;
     tooltip_content += `</div> <div class="inline">`;
     tooltip_content += `users`;
     tooltip_content += `</div> <div class="inline">`;
     tooltip_content += `10`;
     tooltip_content += `</div><div class="inline glyphicon `;
-    tooltip_content += `glyphicon-arrow-up" `;
-    tooltip_content += `style="color:green">`;
-    tooltip_content += `200 %`;
+
+
+    if (d[0].value > d[1].value) {
+        tooltip_content += `glyphicon-arrow-up" `;
+        tooltip_content += `style="color:green">`;
+    } else {
+        tooltip_content += `glyphicon-arrow-down" `;
+        tooltip_content += `style="color:red">`;
+    };
+
+
+    tooltip_content += `200%`;
     tooltip_content += `</div></div></line-chart>`;
     return tooltip_content;
 }
 
-function init_fsa_new_user_chart(time_label) {
-    var tooltip_content = `<line-chart>`;
-    tooltip_content += `<div class="inside">`;
-    tooltip_content += `<div class="title">`;
-    tooltip_content += `29-Nov-2017 vs 30-Nov-2017`;
-    tooltip_content += `</div> <div class="inline">`;
-    tooltip_content += `users`;
-    tooltip_content += `</div> <div class="inline">`;
-    tooltip_content += `10`;
-    tooltip_content += `</div><div class="inline glyphicon `;
-    tooltip_content += `glyphicon-arrow-up" `;
-    tooltip_content += `style="color:green">`;
-    tooltip_content += `200 %`;
-    tooltip_content += `</div></div></line-chart>`;
+function plot_fsa_new_user_chart(start, end) {
 
+    // $('div#new_users.tab-pane.fade.tab-size').html('<div id="new_user_chart" ></div>');
+    var x_val = ['x'],
+        x_val2 = ['x2'],
+        data1 = ['data1'],
+        data2 = ['data2'],
+        m_back = moment.duration(end.diff(start)).days() + 1,
+        start_prev = start.clone().subtract(m_back, 'day');
+    while (start < end) {
+        x_val.push(start.toISOString().match(/\d{4}-\d{2}-\d{2}/)[0]);
+        x_val2.push(start_prev.toISOString().match(/\d{4}-\d{2}-\d{2}/)[0]);
+        data1.push(randNum());
+        data2.push(randNum());
+        start.add(1, 'day');
+        start_prev.add(1, 'day');
+    }
+    console.log(x_val);
+    console.log(x_val2);
     var user_chart = c3.generate({
         bindto: '#new_user_chart',
+        padding: {
+            top: 10,
+            right: 20,
+            bottom: 10,
+            left: 20,
+        },
         data: {
             x: 'x',
             //        xFormat: '%Y%m%d', // 'xFormat' can be used as custom format of 'x'
             columns: [
-                ['x', '2014-01-01', '2014-01-02', '2014-01-03', '2014-01-04', '2014-01-05', '2014-01-06'],
-                //            ['x', '20130101', '20130102', '20130103', '20130104', '20130105', '20130106'],
-                ['data1', 230, 100, 400, 400, 150, 500],
-                ['data2', 130, 340, 200, 700, 350, 350]
+                x_val,
+                data1,
+                data2
             ]
         },
         axis: {
@@ -431,12 +449,19 @@ function init_fsa_new_user_chart(time_label) {
                 }
             }
         },
+        legend: {
+            show: false
+        },
         tooltip: {
             contents: function(d, defaultTitleFormat, defaultValueFormat, color) {
-                return generate_html_linechart_tooltip(d);
+                return generate_html_linechart_tooltip(d, m_back);
             }
         }
     });
+}
+
+function init_fsa_new_user_chart() {
+    plot_fsa_new_user_chart(moment().subtract(6, 'day'), moment());
 }
 
 function init_flot_chart() {
@@ -2059,8 +2084,10 @@ function init_daterangepicker_right() {
 
     var cb = function(start, end, label) {
         console.log(start.toISOString(), end.toISOString(), label);
-        $('#reportrange_right span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
-        init_fsa_user_chart(label);
+        $('#reportrange_right span').html(label);
+        // $('#reportrange_right span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+        // init_fsa_user_chart(label);
+        plot_fsa_new_user_chart(start.clone(), end.clone());
     };
 
     var optionSet1 = {
@@ -2105,7 +2132,7 @@ function init_daterangepicker_right() {
         }
     };
 
-    $('#reportrange_right span').html(moment().subtract(29, 'days').format('MMMM D, YYYY') + ' - ' + moment().format('MMMM D, YYYY'));
+    $('#reportrange_right span').html('Last 7 Days');
 
     $('#reportrange_right').daterangepicker(optionSet1, cb);
 
@@ -2133,7 +2160,6 @@ function init_daterangepicker_right() {
     $('#destroy').click(function() {
         $('#reportrange_right').data('daterangepicker').remove();
     });
-
 }
 
 function init_daterangepicker_single_call() {
