@@ -22,6 +22,7 @@ urlpatterns = [
     # url(r'^gtag/js', collector.generatejs),
     # url(r'^$', TemplateView.as_view(template_name='script/homepage.html')),
     url(r'^app/', include('app.urls')),
+    url(r'^api/',include('api.urls')),
     url(r'^', include('app.urls')),
     # url(r'^$',TemplateView.as_view(template_name='script\homepage.html'),name='homepage'),
 ]

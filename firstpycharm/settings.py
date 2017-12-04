@@ -31,6 +31,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    'django_cassandra_engine',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -38,7 +39,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_extensions',
-    'app.apps.AppConfig'
+    'app.apps.AppConfig',
+    'firstpycharm',
+    'rest_framework',
+    'api'
 ]
 
 MIDDLEWARE = [
@@ -80,14 +84,27 @@ WSGI_APPLICATION = 'firstpycharm.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#     }
+# }
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
+     'default': {
+         'ENGINE': 'django_cassandra_engine',
+         'NAME': 'test',
+         'TEST_NAME': 'test_db',
+         'HOST': '10.88.113.74',
+         'OPTIONS': {
+             'replication': {
+                 'strategy_class': 'SimpleStrategy',
+                 'replication_factor': 1
+             }
+         }
+     }
 }
-
-
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
 

@@ -4351,3 +4351,5 @@ line-chart .inside .inline{
     
     height: 320px;
 }
+
+.c3-chart-lines .c3-target-data2 { stroke-dasharray: 3, 3; }

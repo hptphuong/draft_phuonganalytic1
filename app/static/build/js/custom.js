@@ -379,13 +379,14 @@ function generate_html_linechart_tooltip(d, m_back) {
     var tooltip_content = `<line-chart>`;
     tooltip_content += `<div class="inside">`;
     tooltip_content += `<div class="title">`;
-    tooltip_content += d[0].x.toDateString() + " VS ";
+    tooltip_content += d[0].x.toDateString() + " vs ";
     tooltip_content += d[0].x.clone().addDays(-m_back).toDateString();
     // vs 30-Nov-2017`;
     tooltip_content += `</div> <div class="inline">`;
-    tooltip_content += `users`;
+    // tooltip_content += `users`;
+    tooltip_content += $('ul.nav-tabs>li.active')[0].textContent;
     tooltip_content += `</div> <div class="inline">`;
-    tooltip_content += `10`;
+    tooltip_content += '<b>' + d[0].value + '</b>';
     tooltip_content += `</div><div class="inline glyphicon `;
 
 
@@ -437,7 +438,12 @@ function plot_fsa_new_user_chart(start, end) {
                 x_val,
                 data1,
                 data2
-            ]
+            ],
+            colors: {
+                data1: '#0066ff',
+                data2: '#66ccff'
+
+            },
         },
         axis: {
             x: {
@@ -456,6 +462,10 @@ function plot_fsa_new_user_chart(start, end) {
             contents: function(d, defaultTitleFormat, defaultValueFormat, color) {
                 return generate_html_linechart_tooltip(d, m_back);
             }
+        },
+        brushes: {
+            'data1': 'solid',
+            'data2': 'dashed'
         }
     });
 }
