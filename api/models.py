@@ -26,6 +26,16 @@ class fsa_user(DjangoCassandraModel):
     date_registered=columns.Date()
     email =columns.Text(required=False)
     password =columns.Text(required=False)
+
+class user_daily(DjangoCassandraModel):
+	"""docstring for ClassName"""
+	userid = columns.Text(primary_key=True)
+	fsa = columns.Text(required=True,primary_key=True)
+	fsid = columns.Text(required=False,primary_key=True)
+	m_date =columns.DateTime()
+	ck_new = columns.Integer()
+	class Meta:
+  		get_pk_field='fsa'
     
 
 

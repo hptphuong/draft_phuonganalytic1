@@ -1,6 +1,8 @@
 from api.models import (
     fsa_site,
-    fsa_user
+    fsa_user,
+    user_daily
+
 )
 from rest_framework import serializers
 
@@ -12,9 +14,14 @@ class FsaSiteModelSerializer(DjangoCassandraModelSerializer):
     class Meta:
         model = fsa_site
         fields = '__all__'
-        
+
 class FsaUserSerializer(DjangoCassandraModelSerializer):
 
     class Meta:
         model = fsa_user
+        fields = '__all__'
+
+class UserDailySerializer(DjangoCassandraModelSerializer):
+    class Meta:
+        model = user_daily
         fields = '__all__'
