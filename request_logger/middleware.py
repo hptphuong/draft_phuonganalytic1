@@ -44,8 +44,8 @@ class RequestLoggerMiddleware(MiddlewareMixin):
                 ip = '27.116.56.1'
                 dataExtracted['ip_notfound']=1
                 dataExtracted['country'] = str(g.country(ip))
-            dataExtracted['country']=str(g.country(ip))
-            dataExtracted['city']=str(g.city(ip))
+            dataExtracted['country']=(g.country(ip))
+            dataExtracted['city']=(g.city(ip))
             dataExtracted['_fsid']=request.GET['_fsid']
             dataExtracted['clientID']=request.GET['cid']
             dataExtracted['trackingId'] = request.GET['tid']

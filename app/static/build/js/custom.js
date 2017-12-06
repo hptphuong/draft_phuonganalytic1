@@ -333,44 +333,63 @@ function gd(year, month, day) {
 }
 
 
-function init_fsa_user_chart(time_label) {
+// function init_fsa_user_chart(time_label) {
 
-    // var chart = c3.generate({
-    //     bindto: '#user_chart',
-    //     data: {
-    //         columns: [
-    //             ['current', 30, 200, 100, 400, 150, 250],
-    //             [time_label, 50, 20, 10, 40, 15, 25]
-    //         ]
-    //     }
-    // });
+//     // var chart = c3.generate({
+//     //     bindto: '#user_chart',
+//     //     data: {
+//     //         columns: [
+//     //             ['current', 30, 200, 100, 400, 150, 250],
+//     //             [time_label, 50, 20, 10, 40, 15, 25]
+//     //         ]
+//     //     }
+//     // });
 
-    var user_chart = c3.generate({
-        bindto: '#user_chart',
-        data: {
-            x: 'x',
-            //        xFormat: '%Y%m%d', // 'xFormat' can be used as custom format of 'x'
-            columns: [
-                ['x', '2013-01-01', '2013-01-02', '2013-01-03', '2013-01-04', '2013-01-05', '2013-01-06'],
-                //            ['x', '20130101', '20130102', '20130103', '20130104', '20130105', '20130106'],
-                ['data1', 30, 200, 100, 400, 150, 250],
-                ['data2', 130, 340, 200, 500, 250, 350]
-            ]
-        },
-        axis: {
-            x: {
-                type: 'timeseries',
-                localtime: true,
-                tick: {
-                    count: 4,
-                    format: '%Y-%m-%d'
-                }
-            }
-        }
-    });
-}
+//     var user_chart = c3.generate({
+//         bindto: '#user_chart',
+//         data: {
+//             x: 'x',
+//             //        xFormat: '%Y%m%d', // 'xFormat' can be used as custom format of 'x'
+//             columns: [
+//                 ['x', '2013-01-01', '2013-01-02', '2013-01-03', '2013-01-04', '2013-01-05', '2013-01-06'],
+//                 //            ['x', '20130101', '20130102', '20130103', '20130104', '20130105', '20130106'],
+//                 ['data1', 30, 200, 100, 400, 150, 250],
+//                 ['data2', 130, 340, 200, 500, 250, 350]
+//             ]
+//         },
+//         axis: {
+//             x: {
+//                 type: 'timeseries',
+//                 localtime: true,
+//                 tick: {
+//                     count: 4,
+//                     format: '%Y-%m-%d'
+//                 }
+//             }
+//         }
+//     });
+// }
 
 function generate_html_percent_change(d) {
+
+}
+
+function postRequestDataByTimeRange(start, end, typechart) {
+    // m_start = start.clone();
+    // m_end = end.clone();
+    // if (m_start.format('YYYY-MM-DD') == m_end.format('YYYY-MM-DD')) {
+    //     m_start.subtract(1, 'day')
+    //     console.log(m_start.format('YYYY-MM-DD') + '-----' + m_end.format('YYYY-MM-DD'));
+    // } else {
+    //     m_end.subtract(1, 'day')
+    //     m_start.subtract(1, 'day')
+    //     m_back = moment.duration(end.diff(start)).days() + 1;
+    //     console.log(m_start.format('YYYY-MM-DD') + '-----' + m_end.format('YYYY-MM-DD'));
+    //     console.log(m_start.subtract(m_back, 'day').format('YYYY-MM-DD') + '-----' + m_end.subtract(m_back, 'day').format('YYYY-MM-DD'));
+
+    // }
+    // 
+
 
 }
 
@@ -404,70 +423,91 @@ function generate_html_linechart_tooltip(d, m_back) {
     return tooltip_content;
 }
 
-function plot_fsa_new_user_chart(start, end) {
+function plot_fsa_new_user_chart(array_range_date) {
 
     // $('div#new_users.tab-pane.fade.tab-size').html('<div id="new_user_chart" ></div>');
     var x_val = ['x'],
         x_val2 = ['x2'],
         data1 = ['data1'],
-        data2 = ['data2'],
-        m_back = moment.duration(end.diff(start)).days() + 1,
-        start_prev = start.clone().subtract(m_back, 'day');
-    while (start < end) {
-        x_val.push(start.toISOString().match(/\d{4}-\d{2}-\d{2}/)[0]);
-        x_val2.push(start_prev.toISOString().match(/\d{4}-\d{2}-\d{2}/)[0]);
-        data1.push(randNum());
-        data2.push(randNum());
-        start.add(1, 'day');
-        start_prev.add(1, 'day');
-    }
-    console.log(x_val);
-    console.log(x_val2);
-    var user_chart = c3.generate({
-        bindto: '#new_user_chart',
-        padding: {
-            top: 10,
-            right: 20,
-            bottom: 10,
-            left: 20,
-        },
-        data: {
-            x: 'x',
-            //        xFormat: '%Y%m%d', // 'xFormat' can be used as custom format of 'x'
-            columns: [
-                x_val,
-                data1,
-                data2
-            ],
-            colors: {
-                data1: '#0066ff',
-                data2: '#66ccff'
+        data2 = ['data2'];
 
-            },
-        },
-        axis: {
-            x: {
-                type: 'timeseries',
-                localtime: true,
-                tick: {
-                    count: 4,
-                    format: '%Y-%m-%d'
-                }
-            }
-        },
-        legend: {
-            show: false
-        },
-        tooltip: {
-            contents: function(d, defaultTitleFormat, defaultValueFormat, color) {
-                return generate_html_linechart_tooltip(d, m_back);
-            }
-        },
-        brushes: {
-            'data1': 'solid',
-            'data2': 'dashed'
+
+    // while(start < end) {
+    //     x_val.push(start.toISOString().match(/\d{4}-\d{2}-\d{2}/)[0]);
+    //     x_val2.push(start_prev.toISOString().match(/\d{4}-\d{2}-\d{2}/)[0]);
+    //     data1.push(randNum());
+    //     data2.push(randNum());
+    //     start.add(1, 'day');
+    //     start_prev.add(1, 'day');
+    // }
+    if (Array.isArray(array_range_date[0])) {
+
+        m_start = moment(array_range_date[0][0], 'YYYY-MM-DD');
+        m_end = moment(array_range_date[0][1], 'YYYY-MM-DD');
+        m_start_prev = moment(array_range_date[1][0], 'YYYY-MM-DD');
+        while (m_start <= m_end) {
+            x_val.push(m_start.format('YYYY-MM-DD'));
+            x_val2.push(m_start_prev.format('YYYY-MM-DD'));
+            data1.push(randNum());
+            data2.push(randNum());
+            m_start.add(1, 'day');
+            m_start_prev.add(1, 'day');
         }
-    });
+    }
+    var callback_receive = function(data, x_val, x_val2, data1, data2) {
+        console.log(x_val);
+        console.log(x_val2);
+        var user_chart = c3.generate({
+            bindto: '#new_user_chart',
+            padding: {
+                top: 10,
+                right: 20,
+                bottom: 10,
+                left: 20,
+            },
+            data: {
+                x: 'x',
+                //        xFormat: '%Y%m%d', // 'xFormat' can be used as custom format of 'x'
+                columns: [
+                    x_val,
+                    data1,
+                    data2
+                ],
+                colors: {
+                    data1: '#0066ff',
+                    data2: '#66ccff'
+
+                },
+            },
+            axis: {
+                x: {
+                    type: 'timeseries',
+                    localtime: true,
+                    tick: {
+                        count: 4,
+                        format: '%Y-%m-%d'
+                    }
+                }
+            },
+            legend: {
+                show: false
+            },
+            tooltip: {
+                contents: function(d, defaultTitleFormat, defaultValueFormat, color) {
+                    return generate_html_linechart_tooltip(d, m_back);
+                }
+            },
+            brushes: {
+                'data1': 'solid',
+                'data2': 'dashed'
+            }
+        });
+    }
+    $.get('/api/user_daily', function(data) {
+        callback_receive(data, x_val, x_val2, data1, data2);
+    })
+
+
 }
 
 function init_fsa_new_user_chart() {
@@ -2085,6 +2125,36 @@ function init_daterangepicker() {
 
 }
 
+function generate_array_range_date(start, end, label) {
+    m_start = start.clone();
+    m_end = end.clone();
+    m_back = moment.duration(m_end.diff(m_start)).days() + 1;
+    if (label.match(/Custom/)) {
+        console.log(m_start.format('YYYY-MM-DD') + '-----' + m_end.format('YYYY-MM-DD'));
+        console.log(m_start.clone().subtract(m_back, 'day').format('YYYY-MM-DD') + '-----' + m_end.clone().subtract(m_back, 'day').format('YYYY-MM-DD'));
+        m_rslt = [
+            [m_start.format('YYYY-MM-DD'), m_end.format('YYYY-MM-DD')],
+            [m_start.clone().subtract(m_back, 'day').format('YYYY-MM-DD'), m_end.clone().subtract(m_back, 'day').format('YYYY-MM-DD')]
+        ]
+    } else {
+        if (m_start.format('YYYY-MM-DD') == m_end.format('YYYY-MM-DD')) {
+            m_start.subtract(1, 'day')
+            console.log(m_start.format('YYYY-MM-DD') + '-----' + m_end.format('YYYY-MM-DD'));
+            m_rslt = [m_start.format('YYYY-MM-DD'), m_end.format('YYYY-MM-DD')]
+        } else {
+            m_end.subtract(1, 'day')
+            m_start.subtract(1, 'day')
+            console.log(m_start.format('YYYY-MM-DD') + '-----' + m_end.format('YYYY-MM-DD'));
+            console.log(m_start.clone().subtract(m_back, 'day').format('YYYY-MM-DD') + '-----' + m_end.clone().subtract(m_back, 'day').format('YYYY-MM-DD'));
+            m_rslt = [
+                [m_start.format('YYYY-MM-DD'), m_end.format('YYYY-MM-DD')],
+                [m_start.clone().subtract(m_back, 'day').format('YYYY-MM-DD'), m_end.clone().subtract(m_back, 'day').format('YYYY-MM-DD')]
+            ]
+        }
+    }
+    return m_rslt;
+}
+
 function init_daterangepicker_right() {
 
     if (typeof($.fn.daterangepicker) === 'undefined') {
@@ -2097,16 +2167,18 @@ function init_daterangepicker_right() {
         $('#reportrange_right span').html(label);
         // $('#reportrange_right span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
         // init_fsa_user_chart(label);
-        plot_fsa_new_user_chart(start.clone(), end.clone());
+        // postRequestDataByTimeRange(start, end, 'a');
+        // generate_array_range_date(start, end, label);
+        plot_fsa_new_user_chart(generate_array_range_date(start, end, label));
     };
 
     var optionSet1 = {
         startDate: moment().subtract(29, 'days'),
         endDate: moment(),
         minDate: '01/01/2012',
-        maxDate: '12/31/2020',
+        maxDate: moment().format('MM/DD/YYYY'),
         dateLimit: {
-            days: 60
+            days: 120
         },
         showDropdowns: true,
         showWeekNumbers: true,
@@ -5626,7 +5698,7 @@ function init_echarts() {
 $(document).ready(function() {
 
     init_sparklines();
-    init_fsa_user_chart();
+    // init_fsa_user_chart();
     init_fsa_new_user_chart();
     init_flot_chart();
     init_sidebar();
