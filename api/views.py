@@ -16,6 +16,9 @@ from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import JSONParser
 import logging
 from datetime import datetime
+from dateutil import tz
+from cassandra.cqlengine.connection import get_session
+import json
 logger = logging.getLogger(__name__)
 #curl http://localhost:8000/user/ -X POST 
 # -H "Content-Type: application/json" 
@@ -61,7 +64,7 @@ def fsaUserList(request):
 		logger.warn("parse data>>>>>>>>>>>>>>>>>>>")
 		data = JSONParser().parse(request)
 		logger.warn("passed >>>>>>>>>>>>>>>>>>>")
-		logger.warn("data:"+data)
+		# logger.warn("data:"+data)
 		serializer = FsaUserSerializer(data=data)
 		if serializer.is_valid():
 			serializer.save()
@@ -78,14 +81,36 @@ def userDailyList(request):
 		return JsonResponse(serializer.data, safe=False)
 
 	elif request.method == 'POST':
-		logger.warn("parse data>>>>>>>>>>>>>>>>>>>")
 		data = JSONParser().parse(request)
-		logger.warn("passed >>>>>>>>>>>>>>>>>>>")
-		logger.warn("data:"+data['m_date'])
-		data['m_date']=datetime.strptime(data['m_date'],"%Y-%m-%d")
-		# logger.warn("date:"+data)
-		serializer = UserDailySerializer(data=data)
-		if serializer.is_valid():
-			serializer.save()
-			return JsonResponse(serializer.data, status=201)
-		return JsonResponse(serializer.errors, status=400)
+		utc_zone = tz.gettz('UTC')
+		x1_start=datetime.strptime(data['x1_start'][0],'%Y-%m-%d')
+		x1_end = datetime.strptime(data['x1_end'][0], '%Y-%m-%d')
+		x1_start = x1_start.replace(tzinfo=utc_zone)
+		x1_end = x1_end.replace(tzinfo=utc_zone)
+		results = (
+			user_daily
+				.objects.filter(m_date__gt=x1_start)
+				.filter(m_date__lt=x1_end)
+				.allow_filtering()
+        )
+		session = get_session()
+		session.set_keyspace('test')
+		tmp=session.execute('SELECT * FROM fsa_site limit 10')
+		# for result in user_daily.objects.filter(m_date__gt=x1_start).filter(m_date__lt=x1_end).allow_filtering():
+		# 	print(result)
+		print(tmp)
+		serializer = UserDailySerializer(results, many=True)
+
+		return JsonResponse(json.dumps(serializer.data), status=201, safe=False)
+		# if serializer.is_valid():
+		# # print(json.dumps(serializer.data))
+		# 	return JsonResponse(json.dumps(serializer.data), status=201,safe=False)
+		# return JsonResponse(serializer.errors, status=400)
+
+		# data['m_date']=datetime.strptime(data['m_date'],"%Y-%m-%d")
+		# # logger.warn("date:"+data)
+		# serializer = UserDailySerializer(data=data)
+		# if serializer.is_valid():
+		# 	serializer.save()
+		# 	return JsonResponse(serializer.data, status=201)
+		# return JsonResponse(serializer.errors, status=400)

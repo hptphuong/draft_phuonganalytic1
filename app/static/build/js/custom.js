@@ -503,9 +503,26 @@ function plot_fsa_new_user_chart(array_range_date) {
             }
         });
     }
-    $.get('/api/user_daily', function(data) {
-        callback_receive(data, x_val, x_val2, data1, data2);
-    })
+    var data = JSON.stringify({
+        x1_start: x_val.slice(1, 2),
+        x1_end: x_val.slice(-1),
+        x2_start: x_val2.slice(1, 2),
+        x2_end: x_val2.slice(-1)
+    });
+    // $.post('http://10.88.113.111:8000/api/user_daily/', data=data , function(data) {
+    //     // callback_receive(data, x_val, x_val2, data1, data2);
+    // })
+
+    $.ajax({
+        type: "POST",
+        url: '/api/user_daily/',
+        data: data,
+        contentType: 'application/json',
+        success: function(data) {
+            alert(data);
+        }
+
+    });
 
 
 }
