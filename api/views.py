@@ -95,7 +95,7 @@ def userDailyList(request):
         )
 		session = get_session()
 		session.set_keyspace('test')
-		tmp=session.execute('SELECT * FROM fsa_site limit 10')
+		tmp=session.execute('select count(*) from user_daily group by userid')
 		# for result in user_daily.objects.filter(m_date__gt=x1_start).filter(m_date__lt=x1_end).allow_filtering():
 		# 	print(result)
 		print(tmp)
