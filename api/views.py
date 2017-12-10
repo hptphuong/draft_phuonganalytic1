@@ -2,7 +2,8 @@
 from api.models import (
     fsa_site,
     fsa_user,
-    user_daily
+    user_daily,
+    user_daily_report
 )
 from api.serializers import (
 	FsaSiteModelSerializer,
@@ -77,31 +78,39 @@ def userDailyList(request):
 	logger.warn(">>>>>>>>>>>> userDailyList<<<<<<<<<")
 	if request.method == 'GET':
 		api = user_daily.objects.all()
-		serializer = UserDailySerializer(api, many=True)
-		return JsonResponse(serializer.data, safe=False)
+		# serializer = UserDailySerializer(api, many=True)
+		return JsonResponse(str(list(api)),safe=False)
 
 	elif request.method == 'POST':
 		data = JSONParser().parse(request)
 		utc_zone = tz.gettz('UTC')
-		x1_start=datetime.strptime(data['x1_start'][0],'%Y-%m-%d')
-		x1_end = datetime.strptime(data['x1_end'][0], '%Y-%m-%d')
-		x1_start = x1_start.replace(tzinfo=utc_zone)
-		x1_end = x1_end.replace(tzinfo=utc_zone)
+		x1_start=datetime.strptime(data['x1_start'][0],'%Y-%m-%d').date()
+		x1_end = datetime.strptime(data['x1_end'][0], '%Y-%m-%d').date()
+		# x1_start = x1_start.replace(tzinfo=utc_zone)
+		# x1_end = x1_end.replace(tzinfo=utc_zone)
 		results = (
-			user_daily
+			user_daily_report
 				.objects.filter(m_date__gt=x1_start)
 				.filter(m_date__lt=x1_end)
 				.allow_filtering()
         )
-		session = get_session()
-		session.set_keyspace('test')
-		tmp=session.execute('select count(*) from user_daily group by userid')
-		# for result in user_daily.objects.filter(m_date__gt=x1_start).filter(m_date__lt=x1_end).allow_filtering():
-		# 	print(result)
-		print(tmp)
-		serializer = UserDailySerializer(results, many=True)
+		# session = get_session()
+		# session.set_keyspace('test')
+		# tmp=session.execute('select count(*) from user_daily group by userid')
+		# # for result in user_daily.objects.filter(m_date__gt=x1_start).filter(m_date__lt=x1_end).allow_filtering():
+		# # 	print(result)
+		# print(tmp)
+		# serializer = UserDailySerializer(results, many=True)
+		m_rlst={}
+		m_rlst['date']=[]
+		m_rlst['value']=[]
+		for i in range(0,len(results)):
+			result=results[i]
+			m_rlst['date'].append(str(result['m_date']))
+			m_rlst['value'].append(result['users'])
 
-		return JsonResponse(json.dumps(serializer.data), status=201, safe=False)
+
+		return JsonResponse(json.dumps(m_rlst), status=201, safe=False)
 		# if serializer.is_valid():
 		# # print(json.dumps(serializer.data))
 		# 	return JsonResponse(json.dumps(serializer.data), status=201,safe=False)

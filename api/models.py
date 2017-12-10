@@ -39,7 +39,7 @@ class user_daily(Model):
         get_pk_field='fsa'
 
 class user_daily_report(Model):
-	stringdate=columns.BigInt(primary_key=True)
+	bucket=columns.Integer(primary_key=True)
 	m_date= columns.Date(primary_key=True,clustering_order="DESC")
 	users=columns.Integer()
 
