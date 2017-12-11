@@ -2260,7 +2260,7 @@ function generate_array_range_date(start, end, label) {
     m_start = start.clone();
     m_end = end.clone();
     m_back = moment.duration(m_end.diff(m_start)).days() + 1;
-    if (label.match(/Custom/)) {
+    if (label && label.match(/Custom/)) {
         console.log(m_start.format('YYYY-MM-DD') + '-----' + m_end.format('YYYY-MM-DD'));
         console.log(m_start.clone().subtract(m_back, 'day').format('YYYY-MM-DD') + '-----' + m_end.clone().subtract(m_back, 'day').format('YYYY-MM-DD'));
         m_rslt = [
@@ -2375,6 +2375,8 @@ function init_daterangepicker_right() {
     $('#destroy').click(function() {
         $('#reportrange_right').data('daterangepicker').remove();
     });
+    cb(moment().subtract(6, 'days'), moment());
+
 }
 
 function init_daterangepicker_single_call() {
@@ -5867,8 +5869,8 @@ $(document).ready(function() {
     init_CustomNotification();
     init_autosize();
     init_autocomplete();
-    $('#reportrange_right.pull-right').click();
-    $('div.daterangepicker.dropdown-menu.ltr.opensright>.ranges>ul>li')[0].click()
+    // $('#reportrange_right.pull-right').click();
+    // $('div.daterangepicker.dropdown-menu.ltr.opensright>.ranges>ul>li')[0].click()
         // var ctxL = document.getElementById("lineChart").getContext('2d');
         // var myLineChart = new Chart(ctxL, {
         //     type: 'line',
