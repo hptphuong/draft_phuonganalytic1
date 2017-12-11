@@ -42,6 +42,10 @@ class user_daily_report(Model):
 	bucket=columns.Integer(primary_key=True)
 	m_date= columns.BigInt(primary_key=True)
 	users=columns.Integer()
+class newuser_daily_report(Model):
+    bucket=columns.Integer(primary_key=True)
+    m_date= columns.BigInt(primary_key=True)
+    newusers=columns.Integer()
 class draft_user_daily_report(Model):
 	bucket=columns.Integer(primary_key=True)
 	m_date= columns.BigInt(primary_key=True)

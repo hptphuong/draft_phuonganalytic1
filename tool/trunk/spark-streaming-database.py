@@ -488,7 +488,7 @@ def insert_data_fsa_log_visit(source_path):
     pass
 
 def getSession(keySpaceName):
-    cluster = Cluster(['10.88.113.74'])
+    cluster = Cluster(['127.0.0.1'])
     session = cluster.connect()
     log.info("+------------------------------------------------------+")
     log.info("+-------------------creating keyspace------------------+")
@@ -562,9 +562,11 @@ def insert_data_user_daily_report2(source_path):
                 %(users)s
                 )
             """, consistency_level=ConsistencyLevel.ONE)
+        i=0
         for row in reader:
-            log.info("+----------------------------------------------+row[1]:"+row[1])
-            log.info("+----------------------------------------------+str:"+str(datetime.strptime(row[1],"%Y-%m-%d")))
+            log.info("+----------------------------------------------+row[1]:>>>>>"+str(i))
+            i+=1
+            # log.info("+----------------------------------------------+str:"+str(datetime.strptime(row[1],"%Y-%m-%d")))
 
             session.execute(
                 query, 

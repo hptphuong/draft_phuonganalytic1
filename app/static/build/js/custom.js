@@ -423,23 +423,17 @@ function generate_html_linechart_tooltip(d, m_back) {
     return tooltip_content;
 }
 
-function plot_fsa_new_user_chart(array_range_date) {
+function plot_fsa_user_chart(array_range_date) {
 
     // $('div#new_users.tab-pane.fade.tab-size').html('<div id="new_user_chart" ></div>');
-    var x_val = ['x'],
-        x_val2 = ['x2'],
-        data1 = ['data1'],
-        data2 = ['data2'];
+    // var x_val = ['x'],
+    //     x_val2 = ['x2'],
+    //     data1 = ['data1'],
+    //     data2 = ['data2'];
+    var x_val = [],
+        x_val2 = [];
 
 
-    // while(start < end) {
-    //     x_val.push(start.toISOString().match(/\d{4}-\d{2}-\d{2}/)[0]);
-    //     x_val2.push(start_prev.toISOString().match(/\d{4}-\d{2}-\d{2}/)[0]);
-    //     data1.push(randNum());
-    //     data2.push(randNum());
-    //     start.add(1, 'day');
-    //     start_prev.add(1, 'day');
-    // }
     if (Array.isArray(array_range_date[0])) {
 
         m_start = moment(array_range_date[0][0], 'YYYY-MM-DD');
@@ -448,114 +442,98 @@ function plot_fsa_new_user_chart(array_range_date) {
         while (m_start <= m_end) {
             x_val.push(m_start.format('YYYY-MM-DD'));
             x_val2.push(m_start_prev.format('YYYY-MM-DD'));
-            data1.push(randNum());
-            data2.push(randNum());
             m_start.add(1, 'day');
             m_start_prev.add(1, 'day');
         }
-    }
-    var callback_receive = function(x_val, x_val2, data1, data2) {
-        console.log(x_val);
-        console.log(x_val2);
-        var user_chart = c3.generate({
-            bindto: '#new_user_chart',
-            padding: {
-                //     top: 10,
-                right: 20,
-                //     bottom: 10,
-                //     left: 20,
-            },
-            data: {
-                x: 'x',
-                //        xFormat: '%Y%m%d', // 'xFormat' can be used as custom format of 'x'
-                columns: [
-                    x_val,
-                    data1,
-                    data2
-                ],
-                colors: {
-                    data1: '#0066ff',
-                    data2: '#66ccff'
-
+        var callback_receive = function(x_val, x_val2, data1, data2) {
+            console.log(x_val);
+            console.log(x_val2);
+            var user_chart = c3.generate({
+                bindto: '#user_chart',
+                padding: {
+                    //     top: 10,
+                    right: 20,
+                    //     bottom: 10,
+                    //     left: 20,
                 },
-            },
-            axis: {
-                x: {
-                    type: 'timeseries',
-                    localtime: true,
-                    tick: {
-                        count: 4,
-                        format: '%Y-%m-%d'
+                data: {
+                    x: 'x',
+                    //        xFormat: '%Y%m%d', // 'xFormat' can be used as custom format of 'x'
+                    columns: [
+                        x_val,
+                        data1,
+                        data2
+                    ],
+                    colors: {
+                        data1: '#0066ff',
+                        data2: '#66ccff'
+
+                    },
+                },
+                axis: {
+                    x: {
+                        type: 'timeseries',
+                        localtime: true,
+                        tick: {
+                            count: 4,
+                            format: '%Y-%m-%d'
+                        }
                     }
-                }
-            },
-            grid: {
+                },
+                grid: {
 
-                y: {
-                    show: true
+                    y: {
+                        show: true
+                    }
+                },
+                legend: {
+                    show: false
+                },
+                tooltip: {
+                    contents: function(d, defaultTitleFormat, defaultValueFormat, color) {
+                        return generate_html_linechart_tooltip(d, m_back);
+                    }
+                },
+                brushes: {
+                    'data1': 'solid',
+                    'data2': 'dashed'
                 }
-            },
-            legend: {
-                show: false
-            },
-            tooltip: {
-                contents: function(d, defaultTitleFormat, defaultValueFormat, color) {
-                    return generate_html_linechart_tooltip(d, m_back);
-                }
-            },
-            brushes: {
-                'data1': 'solid',
-                'data2': 'dashed'
-            }
-        });
-        // var chart = c3.generate({
-        //     bindto: '#new_user_chart',
-        //     data: {
-        //         columns: [
-        //             ['sample', 30, 200, 100, 400, 150, 250, 120, 200]
-        //         ]
-        //     },
-        //     grid: {
-        //         x: {
-        //             show: true
-        //         },
-        //         y: {
-        //             show: true
-        //         }
-        //     }
-        // });
-    }
-    var data = JSON.stringify({
-        x1_start: x_val.slice(1, 2),
-        x1_end: x_val.slice(-1),
-        x2_start: x_val2.slice(1, 2),
-        x2_end: x_val2.slice(-1)
-    });
-    // $.post('http://10.88.113.111:8000/api/user_daily/', data=data , function(data) {
-    //     // callback_receive(data, x_val, x_val2, data1, data2);
-    // })
+            });
 
-    $.ajax({
-        type: "POST",
-        url: '/api/user_daily_report/',
-        data: data,
-        contentType: 'application/json',
-        success: function(data) {
-            m_data = JSON.parse(data);
-            m_data['date1'].unshift('x');
-            m_data['date2'].unshift('x1');
-            m_data['value1'].unshift('data1');
-            m_data['value2'].unshift('data2');
-            callback_receive(m_data['date1'], m_data['date2'], m_data['value1'], m_data['value2']);
         }
+        var data = JSON.stringify({
+            x1_start: x_val.slice(1, 2),
+            x1_end: x_val.slice(-1),
+            x2_start: x_val2.slice(1, 2),
+            x2_end: x_val2.slice(-1)
+        });
+        // $.post('http://10.88.113.111:8000/api/user_daily/', data=data , function(data) {
+        //     // callback_receive(data, x_val, x_val2, data1, data2);
+        // })
 
-    });
+        $.ajax({
+            type: "POST",
+            url: '/api/user_daily_report/',
+            data: data,
+            contentType: 'application/json',
+            success: function(data) {
+                m_data = JSON.parse(data);
+                m_data['date1'].unshift('x');
+                m_data['date2'].unshift('x1');
+                m_data['value1'].unshift('data1');
+                m_data['value2'].unshift('data2');
+                callback_receive(m_data['date1'], m_data['date2'], m_data['value1'], m_data['value2']);
+            }
+
+        });
+    }
+
 
 
 }
 
-function init_fsa_new_user_chart() {
-    plot_fsa_new_user_chart(moment().subtract(6, 'day'), moment());
+function init_fsa_user_chart() {
+    plot_fsa_user_chart(moment().subtract(6, 'day'), moment());
 }
 
 function init_flot_chart() {
@@ -2213,7 +2191,7 @@ function init_daterangepicker_right() {
         // init_fsa_user_chart(label);
         // postRequestDataByTimeRange(start, end, 'a');
         // generate_array_range_date(start, end, label);
-        plot_fsa_new_user_chart(generate_array_range_date(start, end, label));
+        plot_fsa_user_chart(generate_array_range_date(start, end, label));
     };
 
     var optionSet1 = {
@@ -2230,8 +2208,8 @@ function init_daterangepicker_right() {
         timePickerIncrement: 1,
         timePicker12Hour: true,
         ranges: {
-            'Today': [moment(), moment()],
-            'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+            // 'Today': [moment(), moment()],
+            // 'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
             'Last 7 Days': [moment().subtract(6, 'days'), moment()],
             'Last 18 Days': [moment().subtract(17, 'days'), moment()],
             'Last 28 Days': [moment().subtract(27, 'days'), moment()],
@@ -5743,7 +5721,7 @@ $(document).ready(function() {
 
     init_sparklines();
     // init_fsa_user_chart();
-    init_fsa_new_user_chart();
+    init_fsa_user_chart();
     init_flot_chart();
     init_sidebar();
     init_wysiwyg();
