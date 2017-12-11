@@ -120,6 +120,8 @@ def userDailyList(request):
 def userDailyReportList(request):
 	if request.method == 'POST':
 		data = JSONParser().parse(request)
+		if(len(data['x1_start'])==0 or len(data['x1_end']) or len(data['x2_start']) or len(data['x2_end'])):
+			return JsonResponse('not support', status=400)
 		utczone = tz.gettz('UTC')
 		x1_start=int(datetime.strptime(data['x1_start'][0],'%Y-%m-%d').replace(tzinfo=utczone).timestamp())
 		x1_end = int(datetime.strptime(data['x1_end'][0], '%Y-%m-%d').replace(tzinfo=utczone).timestamp())
