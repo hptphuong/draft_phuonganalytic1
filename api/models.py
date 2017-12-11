@@ -39,12 +39,33 @@ class user_daily(Model):
         get_pk_field='fsa'
 
 class user_daily_report(Model):
-	stringdate=columns.BigInt(primary_key=True)
-	m_date= columns.Date(primary_key=True,clustering_order="DESC")
+	bucket=columns.Integer(primary_key=True)
+	m_date= columns.BigInt(primary_key=True)
+	users=columns.Integer()
+class draft_user_daily_report(Model):
+	bucket=columns.Integer(primary_key=True)
+	m_date= columns.BigInt(primary_key=True)
 	users=columns.Integer()
 
-	
-# class Comment(Model):
-#     # photo_id = columns.UUID(primary_key=True)
-#     comment_id = columns.TimeUUID(primary_key=True)
-#     comment = columns.Text()
+class fsa_log_visit(Model):
+    userid=columns.Text(primary_key=True)
+    fsa=columns.Text(primary_key=True)
+    fsid =columns.Text(primary_key=True)
+    m_date=columns.BigInt(primary_key=True)
+    idsite =columns.Text()
+    location_ipv4=columns.Text()
+    location_ipv6 =columns.Text()
+    location_browser_lan=columns.Text()
+    location_country_code=columns.Text()
+    location_country_name=columns.Text()
+    location_browser_en=columns.Text()
+    config_os=columns.Text()
+    config_browser_name=columns.Text()
+    config_browser_version=columns.Text()
+    config_resolution=columns.Text()
+    config_color_depth=columns.Text()
+    config_viewport_size=columns.Text()
+    config_java =columns.Text()
+    referal_xxx =columns.Text()
+
+

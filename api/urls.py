@@ -7,6 +7,7 @@ urlpatterns = [
     url(r'^fsa_site/$', views.fsaSiteList),
     url(r'^fsa_user/$', views.fsaUserList),
     url(r'^user_daily/$', views.userDailyList),
+    url(r'^user_daily_report/$', views.userDailyReportList),
     # url(r'^user/(?P<id>[0-9a-zA-Z]+)/$', views.user_detail),
     # url(r'^collaborative-filtering/(?P<id>[0-9a-zA-Z]+)/$', views.getMovieFromCollaborativeFilteringByUserId),
     # url(r'^similarity/(?P<id>[0-9a-zA-Z]+)/$', views.getMovieFromSimilarityByMovieId),

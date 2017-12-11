@@ -1,4 +1,5 @@
 (function() {
+    // version: 0.2
     var O = window,
         M = document,
         m_loccation = M.location;;
@@ -323,7 +324,7 @@
 
     });
 
-    // Implement send function
+    // Implement components of send function
     // ('[trackerName.]send', [hitType], [...fields], [fieldsObject]);
     var fsaSendPageView = function(a) {
         var tailUrl = "t=pageview";
@@ -339,10 +340,12 @@
         tailUrl = tailUrl + "&sr=" + a.get("screenResolution");
         tailUrl = tailUrl + "&vp=" + a.get("viewportSize");
         tailUrl = tailUrl + "&je=" + a.get("javaEnabled") * 1;
+        a.get("userId") && (tailUrl = tailUrl + "&uid=" + a.get("userId"));
 
         // fsaCore.requestImage('http://127.0.0.1:8000/a.gif?', tailUrl);
         fsaCore.requestImage('http://10.88.113.111:8000/a.gif?', tailUrl);
     };
+    // create send function for fsa
     fsaCore.create('send', function(a) {
 
         a.split(".").length < 2 ? trackerName = "t0" : trackerName = a.split(".").slice(0, -1).join(".");
@@ -361,6 +364,27 @@
 
     });
 
+    // simple set function for test
+
+    fsaCore.create('set', function(a) {
+
+        a.split(".").length < 2 ? trackerName = "t0" : trackerName = a.split(".").slice(0, -1).join(".");
+        if (!fsaCore.getTrackerByName(trackerName))
+            return
+        else
+            m_tracker = fsaCore.getTrackerByName(trackerName);
+        args = [].slice.call(arguments, 1);
+        // for simple test so we have follow s
+        if ("object" == typeof args[0]) {
+            keys = Object.keys(args[0]);
+            for (i in keys) {
+                key = keys[i];
+                m_tracker.set(key, args[0][key]);
+            };
+        };
+
+
+    });
     var fsa = function(a) {
 
         if (fsaCore.check(a.split(".").slice(-1)[0])) fsaCore.callFunction.apply(fsaCore, arguments);

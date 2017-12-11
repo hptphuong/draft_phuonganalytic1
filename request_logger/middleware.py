@@ -57,6 +57,8 @@ class RequestLoggerMiddleware(MiddlewareMixin):
             dataExtracted['screenResolution'] = request.GET['sr']
             dataExtracted['viewportSize'] = request.GET['vp']
             dataExtracted['javaEnabled'] = request.GET['je']
+            if('uid' in request.GET):
+                dataExtracted['userId'] = request.GET['uid']
             producer.send('log', dataExtracted)
             return HttpResponse(base64.b64decode(""), content_type='image/gif')
    # logger.warn("Data collector ===================\n")

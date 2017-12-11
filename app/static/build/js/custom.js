@@ -454,16 +454,16 @@ function plot_fsa_new_user_chart(array_range_date) {
             m_start_prev.add(1, 'day');
         }
     }
-    var callback_receive = function(data, x_val, x_val2, data1, data2) {
+    var callback_receive = function(x_val, x_val2, data1, data2) {
         console.log(x_val);
         console.log(x_val2);
         var user_chart = c3.generate({
             bindto: '#new_user_chart',
             padding: {
-                top: 10,
+                //     top: 10,
                 right: 20,
-                bottom: 10,
-                left: 20,
+                //     bottom: 10,
+                //     left: 20,
             },
             data: {
                 x: 'x',
@@ -489,6 +489,12 @@ function plot_fsa_new_user_chart(array_range_date) {
                     }
                 }
             },
+            grid: {
+
+                y: {
+                    show: true
+                }
+            },
             legend: {
                 show: false
             },
@@ -502,6 +508,22 @@ function plot_fsa_new_user_chart(array_range_date) {
                 'data2': 'dashed'
             }
         });
+        // var chart = c3.generate({
+        //     bindto: '#new_user_chart',
+        //     data: {
+        //         columns: [
+        //             ['sample', 30, 200, 100, 400, 150, 250, 120, 200]
+        //         ]
+        //     },
+        //     grid: {
+        //         x: {
+        //             show: true
+        //         },
+        //         y: {
+        //             show: true
+        //         }
+        //     }
+        // });
     }
     var data = JSON.stringify({
         x1_start: x_val.slice(1, 2),
@@ -515,11 +537,16 @@ function plot_fsa_new_user_chart(array_range_date) {
 
     $.ajax({
         type: "POST",
-        url: '/api/user_daily/',
+        url: '/api/user_daily_report/',
         data: data,
         contentType: 'application/json',
         success: function(data) {
-            alert(data);
+            m_data = JSON.parse(data);
+            m_data['date1'].unshift('x');
+            m_data['date2'].unshift('x1');
+            m_data['value1'].unshift('data1');
+            m_data['value2'].unshift('data2');
+            callback_receive(m_data['date1'], m_data['date2'], m_data['value1'], m_data['value2']);
         }
 
     });
