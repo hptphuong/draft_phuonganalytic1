@@ -532,6 +532,115 @@ function plot_fsa_user_chart(array_range_date) {
 
 }
 
+function plot_fsa_new_user_chart(array_range_date) {
+
+    // $('div#new_users.tab-pane.fade.tab-size').html('<div id="new_user_chart" ></div>');
+    // var x_val = ['x'],
+    //     x_val2 = ['x2'],
+    //     data1 = ['data1'],
+    //     data2 = ['data2'];
+    var x_val = [],
+        x_val2 = [];
+
+
+    if (Array.isArray(array_range_date[0])) {
+
+        m_start = moment(array_range_date[0][0], 'YYYY-MM-DD');
+        m_end = moment(array_range_date[0][1], 'YYYY-MM-DD');
+        m_start_prev = moment(array_range_date[1][0], 'YYYY-MM-DD');
+        while (m_start <= m_end) {
+            x_val.push(m_start.format('YYYY-MM-DD'));
+            x_val2.push(m_start_prev.format('YYYY-MM-DD'));
+            m_start.add(1, 'day');
+            m_start_prev.add(1, 'day');
+        }
+        var callback_receive = function(x_val, x_val2, data1, data2) {
+            console.log(x_val);
+            console.log(x_val2);
+            var user_chart = c3.generate({
+                bindto: '#new_user_chart',
+                padding: {
+                    //     top: 10,
+                    right: 20,
+                    //     bottom: 10,
+                    //     left: 20,
+                },
+                data: {
+                    x: 'x',
+                    //        xFormat: '%Y%m%d', // 'xFormat' can be used as custom format of 'x'
+                    columns: [
+                        x_val,
+                        data1,
+                        data2
+                    ],
+                    colors: {
+                        data1: '#0066ff',
+                        data2: '#66ccff'
+
+                    },
+                },
+                axis: {
+                    x: {
+                        type: 'timeseries',
+                        localtime: true,
+                        tick: {
+                            count: 4,
+                            format: '%Y-%m-%d'
+                        }
+                    }
+                },
+                grid: {
+
+                    y: {
+                        show: true
+                    }
+                },
+                legend: {
+                    show: false
+                },
+                tooltip: {
+                    contents: function(d, defaultTitleFormat, defaultValueFormat, color) {
+                        return generate_html_linechart_tooltip(d, m_back);
+                    }
+                },
+                brushes: {
+                    'data1': 'solid',
+                    'data2': 'dashed'
+                }
+            });
+
+        }
+        var data = JSON.stringify({
+            x1_start: x_val.slice(1, 2),
+            x1_end: x_val.slice(-1),
+            x2_start: x_val2.slice(1, 2),
+            x2_end: x_val2.slice(-1)
+        });
+        // $.post('http://10.88.113.111:8000/api/user_daily/', data=data , function(data) {
+        //     // callback_receive(data, x_val, x_val2, data1, data2);
+        // })
+
+        $.ajax({
+            type: "POST",
+            url: '/api/new_user_daily_report/',
+            data: data,
+            contentType: 'application/json',
+            success: function(data) {
+                m_data = JSON.parse(data);
+                m_data['date1'].unshift('x');
+                m_data['date2'].unshift('x1');
+                m_data['value1'].unshift('data1');
+                m_data['value2'].unshift('data2');
+                callback_receive(m_data['date1'], m_data['date2'], m_data['value1'], m_data['value2']);
+            }
+
+        });
+    }
+
+
+
+}
+
 function init_fsa_user_chart() {
     plot_fsa_user_chart(moment().subtract(6, 'day'), moment());
 }
@@ -2191,7 +2300,9 @@ function init_daterangepicker_right() {
         // init_fsa_user_chart(label);
         // postRequestDataByTimeRange(start, end, 'a');
         // generate_array_range_date(start, end, label);
-        plot_fsa_user_chart(generate_array_range_date(start, end, label));
+        var array_range_date = generate_array_range_date(start, end, label);
+        plot_fsa_user_chart(array_range_date);
+        plot_fsa_new_user_chart(array_range_date);
     };
 
     var optionSet1 = {
@@ -5721,7 +5832,8 @@ $(document).ready(function() {
 
     init_sparklines();
     // init_fsa_user_chart();
-    init_fsa_user_chart();
+    // init_fsa_user_chart();
+
     init_flot_chart();
     init_sidebar();
     init_wysiwyg();
@@ -5755,50 +5867,52 @@ $(document).ready(function() {
     init_CustomNotification();
     init_autosize();
     init_autocomplete();
-    // var ctxL = document.getElementById("lineChart").getContext('2d');
-    // var myLineChart = new Chart(ctxL, {
-    //     type: 'line',
-    //     data: {
-    //         labels: ["January", "February", "March", "April", "May", "June", "July"],
-    //         datasets: [{
-    //             label: "My First dataset",
-    //             fillColor: "rgba(220,220,220,0.2)",
-    //             strokeColor: "rgba(220,220,220,1)",
-    //             pointColor: "rgba(220,220,220,1)",
-    //             pointStrokeColor: "#fff",
-    //             pointHighlightFill: "#fff",
-    //             pointHighlightStroke: "rgba(220,220,220,1)",
-    //             data: [65, 59, 80, 81, 56, 55, 40]
-    //         }, {
-    //             label: "My Second dataset",
-    //             fillColor: "rgba(151,187,205,0.2)",
-    //             strokeColor: "rgba(151,187,205,1)",
-    //             pointColor: "rgba(151,187,205,1)",
-    //             pointStrokeColor: "#fff",
-    //             pointHighlightFill: "#fff",
-    //             pointHighlightStroke: "rgba(151,187,205,1)",
-    //             data: [28, 48, 40, 19, 86, 27, 90]
-    //         }]
-    //     },
-    //     options: {
-    //         responsive: true
-    //     }
-    // });
-    //
-    // var chart = c3.generate({
-    //     bindto: '#lineChart1',
-    //     data: {
-    //         xs: {
-    //             'data1': 'x1',
-    //             'data2': 'x2',
-    //         },
-    //         columns: [
-    //             ['x1', 10, 30, 45, 50, 70, 100],
-    //             ['x2', 30, 50, 75, 100, 120],
-    //             ['data1', 30, 200, 100, 400, 150, 250],
-    //             ['data2', 20, 180, 240, 100, 190]
-    //         ]
-    //     }
-    // });
+    $('#reportrange_right.pull-right').click();
+    $('div.daterangepicker.dropdown-menu.ltr.opensright>.ranges>ul>li')[0].click()
+        // var ctxL = document.getElementById("lineChart").getContext('2d');
+        // var myLineChart = new Chart(ctxL, {
+        //     type: 'line',
+        //     data: {
+        //         labels: ["January", "February", "March", "April", "May", "June", "July"],
+        //         datasets: [{
+        //             label: "My First dataset",
+        //             fillColor: "rgba(220,220,220,0.2)",
+        //             strokeColor: "rgba(220,220,220,1)",
+        //             pointColor: "rgba(220,220,220,1)",
+        //             pointStrokeColor: "#fff",
+        //             pointHighlightFill: "#fff",
+        //             pointHighlightStroke: "rgba(220,220,220,1)",
+        //             data: [65, 59, 80, 81, 56, 55, 40]
+        //         }, {
+        //             label: "My Second dataset",
+        //             fillColor: "rgba(151,187,205,0.2)",
+        //             strokeColor: "rgba(151,187,205,1)",
+        //             pointColor: "rgba(151,187,205,1)",
+        //             pointStrokeColor: "#fff",
+        //             pointHighlightFill: "#fff",
+        //             pointHighlightStroke: "rgba(151,187,205,1)",
+        //             data: [28, 48, 40, 19, 86, 27, 90]
+        //         }]
+        //     },
+        //     options: {
+        //         responsive: true
+        //     }
+        // });
+        //
+        // var chart = c3.generate({
+        //     bindto: '#lineChart1',
+        //     data: {
+        //         xs: {
+        //             'data1': 'x1',
+        //             'data2': 'x2',
+        //         },
+        //         columns: [
+        //             ['x1', 10, 30, 45, 50, 70, 100],
+        //             ['x2', 30, 50, 75, 100, 120],
+        //             ['data1', 30, 200, 100, 400, 150, 250],
+        //             ['data2', 20, 180, 240, 100, 190]
+        //         ]
+        //     }
+        // });
 
 });

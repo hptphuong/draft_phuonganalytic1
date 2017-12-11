@@ -3,7 +3,8 @@ from api.models import (
     fsa_site,
     fsa_user,
     user_daily,
-    user_daily_report # Pure model, not have serialize
+    user_daily_report, # Pure model, not have serialize
+    newuser_daily_report
 )
 from api.serializers import (
 	FsaSiteModelSerializer,
@@ -167,5 +168,51 @@ def userDailyReportList(request):
 			timestamp_date_utc=timestamp_date.astimezone(utczone).date()
 			m_response['date2'].append(str(timestamp_date_utc))
 			m_response['value2'].append(query_rslt[i]['users'])
+		return JsonResponse(json.dumps(m_response), status=201, safe=False)
+	return JsonResponse('not support', status=400)
+
+@csrf_exempt
+def newuserDailyReportList(request):
+	if request.method == 'POST':
+		data = JSONParser().parse(request)
+		# if(len(data['x1_start'])==0 or len(data['x1_end']) or len(data['x2_start']) or len(data['x2_end'])):
+		# 	return JsonResponse({'status':'false','message':'null querry'}, status=400)
+		utczone = tz.gettz('UTC')
+		x1_start=int(datetime.strptime(data['x1_start'][0],'%Y-%m-%d').replace(tzinfo=utczone).timestamp())
+		x1_end = int(datetime.strptime(data['x1_end'][0], '%Y-%m-%d').replace(tzinfo=utczone).timestamp())
+		x2_start=int(datetime.strptime(data['x2_start'][0],'%Y-%m-%d').replace(tzinfo=utczone).timestamp())
+		x2_end = int(datetime.strptime(data['x2_end'][0], '%Y-%m-%d').replace(tzinfo=utczone).timestamp())
+
+		m_response={}
+		# first range
+		m_response['date1']=[]
+		m_response['value1']=[]
+
+		query_rslt = (
+			newuser_daily_report
+				.objects.filter(m_date__gte=x1_start)
+				.filter(m_date__lte=x1_end)
+				.allow_filtering()
+		)
+		for i in range(0,len(query_rslt)):
+			timestamp_date=datetime.fromtimestamp(query_rslt[i]['m_date']) # it will be asigned at localtimezone, not right, need to convert to utc
+			timestamp_date_utc=timestamp_date.astimezone(utczone).date()
+			m_response['date1'].append(str(timestamp_date_utc))
+			m_response['value1'].append(query_rslt[i]['newusers'])
+		# second range
+		m_response['date2']=[]
+		m_response['value2']=[]
+
+		query_rslt = (
+			newuser_daily_report
+				.objects.filter(m_date__gte=x2_start)
+				.filter(m_date__lte=x2_end)
+				.allow_filtering()
+		)
+		for i in range(0,len(query_rslt)):
+			timestamp_date=datetime.fromtimestamp(query_rslt[i]['m_date']) # it will be asigned at localtimezone, not right, need to convert to utc
+			timestamp_date_utc=timestamp_date.astimezone(utczone).date()
+			m_response['date2'].append(str(timestamp_date_utc))
+			m_response['value2'].append(query_rslt[i]['newusers'])
 		return JsonResponse(json.dumps(m_response), status=201, safe=False)
 	return JsonResponse('not support', status=400)

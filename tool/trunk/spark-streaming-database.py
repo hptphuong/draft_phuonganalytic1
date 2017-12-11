@@ -580,6 +580,44 @@ def insert_data_user_daily_report2(source_path):
         log.info("+-----Insert data into fsa_site successfully----+")
         log.info("+--------------------------------------------------------+")
     pass
+def insert_data_new_user_daily_report(source_path):
+    with open(source_path, 'r') as csvfile:
+        reader = csv.reader(csvfile, delimiter=',')
+        session = getSession(KEYSPACE)
+        log.info("+-----------Get session successfully-----------+")
+        log.info("+----------------------------------------------+")
+        log.info("+----------Begin insert data into fsa_site-------+")
+        log.info("+----------------------------------------------+")
+        utczone = tz.gettz('UTC')
+        query = SimpleStatement("""
+            INSERT INTO newuser_daily_report (
+                bucket,
+                m_date, 
+                newusers)
+            VALUES (
+                %(bucket)s,
+                %(m_date)s, 
+                %(newusers)s
+                )
+            """, consistency_level=ConsistencyLevel.ONE)
+        i=0
+        for row in reader:
+            log.info("+----------------------------------------------+row[1]:>>>>>"+str(i))
+            i+=1
+            # log.info("+----------------------------------------------+str:"+str(datetime.strptime(row[1],"%Y-%m-%d")))
+            log.info(int(datetime.strptime(row[0],"%Y-%m-%d").replace(tzinfo=utczone).timestamp()))
+            session.execute(
+                query, 
+                dict(
+                    bucket=1,
+                    m_date=int(datetime.strptime(row[0],"%Y-%m-%d").replace(tzinfo=utczone).timestamp()), 
+                    newusers=int(row[1])
+                ))
+            pass
+        log.info("+--------------------------------------------------------+")
+        log.info("+-----Insert data into fsa_site successfully----+")
+        log.info("+--------------------------------------------------------+")
+    pass
 if __name__ == "__main__":
     # if len(sys.argv) !=4:
     #     log.info('+---------------------------------------------------------+')
@@ -599,7 +637,8 @@ if __name__ == "__main__":
     # create_draft_user_daily()
     # insert_data_draft_user_daily(path_input1)
     # insert_data_draft_user_daily_report(path_input1)
-    insert_data_user_daily_report2(path_input1)
+    # insert_data_user_daily_report2(path_input1)
+    insert_data_new_user_daily_report(path_input1)
     # create_fsa_log_visit()
     # insert_data_fsa_log_visit(path_input3)
     # create_user_daily()
